@@ -119,7 +119,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const sliders = (slides, dir, prev, next) => {
     let slideIndex = 1,
-        paused = false;
+      paused = false;
     const items = document.querySelectorAll(slides);
 
     function showSlides(n) {
@@ -162,7 +162,7 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     } catch (e) { }
 
-    function activateAnimation () {
+    function activateAnimation() {
       if (dir === 'vertical') {
         paused = setInterval(function () {
           plusSlides(1);
@@ -189,12 +189,12 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   // Forms
-  
+
   const forms = () => {
     const form = document.querySelectorAll('form'),
-          inputs = document.querySelectorAll('input'),
-          upload = document.querySelectorAll('[name="upload"]');
-  
+      inputs = document.querySelectorAll('input'),
+      upload = document.querySelectorAll('[name="upload"]');
+
     const message = {
       loading: 'Загрузка...',
       success: 'Спасибо! Мы скоро свяжемся с Вами',
@@ -208,16 +208,16 @@ window.addEventListener('DOMContentLoaded', () => {
       designer: 'assets/server.php',
       question: 'assets/question.php'
     };
-  
+
     const postData = async (url, data) => {
       let res = await fetch(url, {
         method: 'POST',
         body: data
       });
-  
+
       return await res.text();
     };
-  
+
     const clearInputs = () => {
       inputs.forEach(item => {
         item.value = '';
@@ -237,12 +237,12 @@ window.addEventListener('DOMContentLoaded', () => {
         item.previousElementSibling.textContent = name;
       });
     });
-  
+
     form.forEach(item => {
       item.addEventListener('submit', (e) => {
         e.preventDefault();
-  
-  
+
+
         let statusMessage = document.createElement('div');
         statusMessage.classList.add('status');
         item.parentNode.appendChild(statusMessage);
@@ -260,32 +260,32 @@ window.addEventListener('DOMContentLoaded', () => {
         let textMessage = document.createElement('div');
         textMessage.textContent = message.loading;
         statusMessage.appendChild(textMessage);
-  
+
         const formData = new FormData(item);
         let api;
         item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : path.question;
-  
+
         postData(api, formData)
-        .then(res => {
-          console.log(res);
-          statusImg.setAttribute('src', message.ok);
-          textMessage.textContent = message.success;
-        })
-        .catch(() => {
-          statusImg.setAttribute('src', message.fail);
-          textMessage.textContent = message.failure;
-        })
-        .finally(() => {
-          clearInputs();
-          setTimeout(() => {
-            statusMessage.remove();
-            item.style.display = 'block';
-            item.classList.remove('fadeOutUp');
-            item.classList.add('fadeInUp');
-          }, 5000);
-        });
-  
-  
+          .then(res => {
+            console.log(res);
+            statusImg.setAttribute('src', message.ok);
+            textMessage.textContent = message.success;
+          })
+          .catch(() => {
+            statusImg.setAttribute('src', message.fail);
+            textMessage.textContent = message.failure;
+          })
+          .finally(() => {
+            clearInputs();
+            setTimeout(() => {
+              statusMessage.remove();
+              item.style.display = 'block';
+              item.classList.remove('fadeOutUp');
+              item.classList.add('fadeInUp');
+            }, 5000);
+          });
+
+
       });
     });
   };
@@ -309,17 +309,17 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    function createMask (event) {
+    function createMask(event) {
       let matrix = '+7 (___) ___ __ __',
-          i = 0,
-          def = matrix.replace(/\D/g, ''),
-          val = this.value.replace(/\D/g, '');
+        i = 0,
+        def = matrix.replace(/\D/g, ''),
+        val = this.value.replace(/\D/g, '');
 
       if (def.length >= val.length) {
         val = def;
       }
 
-      this.value = matrix.replace(/./g, function(a) {
+      this.value = matrix.replace(/./g, function (a) {
         return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? '' : a;
       });
 
@@ -347,12 +347,69 @@ window.addEventListener('DOMContentLoaded', () => {
     const txtInputs = document.querySelectorAll(selector);
 
     txtInputs.forEach(input => {
-      input.addEventListener('keypress', function(e) {
+      input.addEventListener('keypress', function (e) {
         if (e.key.match(/[^а-яё 0-9]/ig)) {
           e.preventDefault();
         }
       });
     });
+  };
+
+  // showMoreStyles
+
+  const showMoreStyles = (trigger, wrapper) => {
+    const btn = document.querySelector(trigger);
+
+
+    // const cards = document.querySelectorAll(styles);
+    // cards.forEach(card => {
+    //   card.classList.add('animated', 'fadeInUp');
+    // });
+
+    // btn.addEventListener('click', () => {
+    //   cards.forEach(card => {
+    //     card.classList.remove('hidden-lg', 'hidden-md', 'hidden-xs');
+    //     card.classList.add('col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1');
+    //   });
+    //   // btn.style.display = 'none';
+    //   btn.remove();
+    // });
+
+    const getResource = async (url) => {
+      let res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+      }
+
+      return await res.json();
+    };
+
+    btn.addEventListener('click', function () {
+      getResource('assets/db.json')
+        .then(res => createCards(res.styles))
+        .catch(error => console.log(error));
+
+      this.remove();
+    });
+
+    function createCards(response) {
+      response.forEach(({src, title, link}) => {
+        let card = document.createElement('div');
+
+        card.classList.add('col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1', 'animated', 'fadeInUp');
+
+        card.innerHTML = `
+          <div class='styles-block'>
+            <img src=${src} alt='style'>
+            <h4>${title}</h4>
+            <a href=${link}>Подробнее</a>
+          </div>
+        `;
+
+        document.querySelector(wrapper).appendChild(card);
+      });
+    };
   };
 
   modals();
@@ -362,5 +419,6 @@ window.addEventListener('DOMContentLoaded', () => {
   mask('[name="phone"]');
   checkTestInputs('[name="name"]');
   checkTestInputs('[name="message"]');
+  showMoreStyles('.button-styles', '#styles .row')
 });
 
