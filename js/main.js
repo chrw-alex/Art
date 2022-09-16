@@ -555,24 +555,38 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Accordion
 
-  const accordion = (triggersSelector, itemsSelector) => {
-    const buttons = document.querySelectorAll(triggersSelector),
-          blocks = document.querySelectorAll(itemsSelector);
-
-    blocks.forEach(block => {
-      block.classList.add('animated', 'fadeInDown')
-    });
+  const accordion = (triggersSelector) => {
+    const buttons = document.querySelectorAll(triggersSelector);
 
     buttons.forEach(button => {
       button.addEventListener('click', function() {
-        if (!this.classList.contains('active')) {
-          buttons.forEach(button => {
-            button.classList.remove('active', 'active-style');
-          });
-          this.classList.add('active', 'active-style');
+        this.classList.toggle('active-style');
+        this.nextElementSibling.classList.toggle('active-content');
+
+        if (this.classList.contains('active-style')) {
+          this.nextElementSibling.style.maxHeight = this.nextElementSibling.scrollHeight + 80 + 'px';
+        } else {
+          this.nextElementSibling.style.maxHeight = '0px';
         }
       });
     });
+
+    //const blocks = document.querySelectorAll(itemsSelector);
+
+    // blocks.forEach(block => {
+    //   block.classList.add('animated', 'fadeInDown')
+    // });
+
+    // buttons.forEach(button => {
+    //   button.addEventListener('click', function() {
+    //     if (!this.classList.contains('active')) {
+    //       buttons.forEach(button => {
+    //         button.classList.remove('active', 'active-style');
+    //       });
+    //       this.classList.add('active', 'active-style');
+    //     }
+    //   });
+    // });
   };
 
   modals();
@@ -586,6 +600,6 @@ window.addEventListener('DOMContentLoaded', () => {
   calc('#size', '#material', '#options', '.promocode', '.calc-price');
   filter();
   pictureSize('.sizes-block');
-  accordion('.accordion-heading', '.accordion-block');
+  accordion('.accordion-heading');
 });
 
