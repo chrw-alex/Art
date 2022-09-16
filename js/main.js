@@ -522,6 +522,37 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // pitureSize
+
+  const pictureSize = (imgSelector) => {
+    const blocks = document.querySelectorAll(imgSelector);
+
+    function showImg (block) {
+      const img = block.querySelector('img');
+      img.src = img.src.slice(0, -4) + '-1.png';
+      block.querySelectorAll('p:not(.sizes-hit)').forEach(p => {
+        p.style.display = 'none';
+      });
+    }
+
+    function hideImg (block) {
+      const img = block.querySelector('img');
+      img.src = img.src.slice(0, -6) + '.png';
+      block.querySelectorAll('p:not(.sizes-hit)').forEach(p => {
+        p.style.display = 'block';
+      });
+    }
+
+    blocks.forEach(block => {
+      block.addEventListener('mouseover', () => {
+        showImg(block);
+      });
+      block.addEventListener('mouseout', () => {
+        hideImg(block);
+      });
+    });
+  };
+
   modals();
   sliders('.feedback-slider-item', 'horizontal', '.main-prev-btn', '.main-next-btn');
   sliders('.main-slider-item', 'vertical');
@@ -532,5 +563,6 @@ window.addEventListener('DOMContentLoaded', () => {
   showMoreStyles('.button-styles', '#styles .row');
   calc('#size', '#material', '#options', '.promocode', '.calc-price');
   filter();
+  pictureSize('.sizes-block');
 });
 
