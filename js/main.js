@@ -553,6 +553,28 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // Accordion
+
+  const accordion = (triggersSelector, itemsSelector) => {
+    const buttons = document.querySelectorAll(triggersSelector),
+          blocks = document.querySelectorAll(itemsSelector);
+
+    blocks.forEach(block => {
+      block.classList.add('animated', 'fadeInDown')
+    });
+
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+          buttons.forEach(button => {
+            button.classList.remove('active', 'active-style');
+          });
+          this.classList.add('active', 'active-style');
+        }
+      });
+    });
+  };
+
   modals();
   sliders('.feedback-slider-item', 'horizontal', '.main-prev-btn', '.main-next-btn');
   sliders('.main-slider-item', 'vertical');
@@ -564,5 +586,6 @@ window.addEventListener('DOMContentLoaded', () => {
   calc('#size', '#material', '#options', '.promocode', '.calc-price');
   filter();
   pictureSize('.sizes-block');
+  accordion('.accordion-heading', '.accordion-block');
 });
 
